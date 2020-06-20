@@ -2,22 +2,22 @@
 
 //DECLARATIVE
 pipeline{
-	
+
 	agent any
 	stages{
 		stage('Build') {
 			stages{
-				echo "Build"
+				echo 'Build'
 			}
 		}
 		stage('Test') {
 			stages{
-				echo "Test"
+				echo 'Test'
 			}
 		}
 		stage('Integration Test') {
 			stages{
-				echo "Integration Test"
+				echo 'Integration Test'
 			}
 		}	
 	}
