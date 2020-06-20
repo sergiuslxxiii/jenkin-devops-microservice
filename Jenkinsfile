@@ -1,15 +1,37 @@
-node {
-	/*stage('Build') {
-		echo "Build"
-	}
-	stage('Test') {
-		echo "Test"
-	}
-	stage('Integration Test') {
-		echo "Integration Test"
-	}*/
+//SCRIPTED
+
+//DECLARATIVE
+pipeline{
 	
-	echo 'Build'
-	echo 'Test'
-	echo 'Integration Test'
+	agent any
+	stages{
+		stage('Build') {
+			stages{
+				echo "Build"
+			}
+		}
+		stage('Test') {
+			stages{
+				echo "Test"
+			}
+		}
+		stage('Integration Test') {
+			stages{
+				echo "Integration Test"
+			}
+		}	
+	}
+
+	post{
+		always{
+			echo 'Im awesome. I run always'		
+		}
+		success{
+			echo 'I run when you are sucessful'		
+		}
+		failure{
+			echo 'I run when you fail'		
+		}
+	}	
+
 }
