@@ -3,7 +3,7 @@
 //DECLARATIVE
 pipeline{
 	
-	//agent any
+	agent any
 	//agent { docker { image 'node:13.8'} }
 	//agent { docker { image 'maven:3.6.3'} }
 	stages {
