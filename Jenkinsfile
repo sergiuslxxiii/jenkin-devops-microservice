@@ -6,12 +6,15 @@ pipeline{
 	agent any
 	//agent { docker { image 'node:13.8'} }
 	//agent { docker { image 'maven:3.6.3'} }
+
 	environment{
 		dockerHome = tool 'myDocker'
 		mavenHome = tool 'myMaven'
 		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
 	}
+
 	stages {
+
 		stage('Build') {
 			steps {
 				sh 'mvn --version'
@@ -27,16 +30,49 @@ pipeline{
 				echo "WORKSPACE - $env.WORKSPACE"	
 			}
 		}
-		stage('Test') {
+		
+		stage('Compile') {
 			steps {
-				echo "Test"
+				sh "mvn clean compile"
 			}
 		}
+
+		/*stage('Test') {
+			steps {
+				echo "mvn test"
+			}
+		}
+
 		stage('Integration Test') {
 			steps {
-				echo "Integration Test"
+				sh "mvn failsafe:integration-test failsafe:verify"
 			}
-		}	
+		}	*/
+
+		stage('Package') {
+			steps {
+				sh "mvn package -DskipTests"
+			}
+		}
+		stage('Build Docker Image') {
+			steps {
+				//"docker build -t tadeus10/currency-exchange-devops:$env.BUILD_TAG"
+				script {
+					dockerImage = docker.build("tadeus10/currency-exchange-devops:$env.BUILD_TAG") 
+				}
+			}
+		}
+
+		stage('Push Docker Image') {
+			steps {				
+				script {
+					docker.withRegistry('','dockerhub')
+					dockerImage.push();
+					dockerImage.push('lastest');
+				}
+			}
+		}
+
 	}
 
 	post{
